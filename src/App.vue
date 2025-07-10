@@ -107,126 +107,183 @@ const exportToPDF = () => {
     return
   }
 
-  try {
-    const doc = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'letter'  // 8.5" x 11" = 215.9mm x 279.4mm
-    })
-    
-    // Add title
-    doc.setFontSize(20)
-    doc.setTextColor(44, 62, 80)
-    doc.text('Strong\'s Dictionary Text Analysis Report', 20, 25)
-    
-    // Add summary statistics
-    doc.setFontSize(12)
-    doc.setTextColor(108, 117, 125)
-    const currentDate = new Date().toLocaleDateString()
-    doc.text(`Generated on: ${currentDate}`, 20, 35)
-    
-    doc.setFontSize(14)
-    doc.setTextColor(44, 62, 80)
-    doc.text(`Analysis Summary:`, 20, 50)
-    doc.text(`Total Strong's Numbers: ${totalWords.value}`, 30, 60)
-    doc.text(`Unique Words: ${uniqueWords.value}`, 30, 70)
-    
-    // Prepare table data
-    const tableData = analysisResults.value.map(result => [
-      result.strongsNumber,
-      result.count.toString(),
-      result.language.substring(0, 1), // Single letter: "H"/"G"
-      result.word || 'N/A',
-      result.definition || 'N/A'  // No truncation - let it wrap
-    ])
-    
-    // Add table - check if autoTable is available
-    if (typeof doc.autoTable === 'function') {
-      doc.autoTable({
-        head: [['Strong\'s #', 'Cnt', 'L', 'Word', 'Definition']],
-        body: tableData,
-        startY: 85,
-        styles: {
-          fontSize: 6,
-          cellPadding: 1,
-          overflow: 'linebreak',
-          halign: 'left',
-          valign: 'top'
-        },
-        headStyles: {
-          fillColor: [0, 123, 255],
-          textColor: [255, 255, 255],
-          fontStyle: 'bold',
-          fontSize: 6,
-          halign: 'center'
-        },
-        columnStyles: {
-          0: { 
-            cellWidth: 14,  // Strong's # - minimal for G12345
-            halign: 'center',
-            fontSize: 5
-          }, 
-          1: { 
-            cellWidth: 6,   // Count - minimal for numbers
-            halign: 'center',
-            fontSize: 5
-          },  
-          2: { 
-            cellWidth: 5,   // Language - just G or H
-            halign: 'center',
-            fontSize: 5
-          }, 
-          3: { 
-            cellWidth: 15,  // Word - compact Hebrew/Greek
-            halign: 'left',
-            fontSize: 5
-          }, 
-          4: { 
-            cellWidth: 155, // Definition - remaining space (200mm - 40mm margins - 40mm other columns)
-            halign: 'left',
-            fontSize: 5
-          }
-        },
-        margin: { left: 10, right: 10, top: 10, bottom: 10 },
-        theme: 'grid',
-        pageBreak: 'auto',
-        tableWidth: 195,  // Explicit table width in mm (215.9mm page - 20mm margins)
-        showHead: 'everyPage'
-      })
-    } else {
-      // Fallback: just add text without table
-      let yPos = 85
-      doc.text('Strong\'s #  Count  Language  Word  Definition', 20, yPos)
-      yPos += 10
-      tableData.forEach(row => {
-        doc.text(row.join('  '), 20, yPos)
-        yPos += 8
-        if (yPos > 280) { // Add new page if needed
-          doc.addPage()
-          yPos = 20
-        }
-      })
+  // Create a new window with print-optimized content
+  const printWindow = window.open('', '_blank')
+  const currentDate = new Date().toLocaleDateString()
+  
+  const printContent = `<!DOCTYPE html>
+<html>
+<head>
+  <title>Strong's Dictionary Analysis Report</title>
+  <style>
+    @page {
+      size: letter;
+      margin: 0.75in;
     }
     
-    // Save and open the PDF
-    const fileName = `strongs-analysis-${new Date().toISOString().split('T')[0]}.pdf`
+    @media print {
+      body { margin: 0; }
+      .no-print { display: none; }
+    }
     
-    // Get PDF as blob and open in new tab
-    const pdfBlob = doc.output('blob')
-    const blobUrl = URL.createObjectURL(pdfBlob)
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 10pt;
+      line-height: 1.2;
+      color: #333;
+    }
     
-    // Open in new tab
-    window.open(blobUrl, '_blank')
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 10px;
+    }
     
-    // Also trigger download
-    doc.save(fileName)
+    .header h1 {
+      margin: 0;
+      font-size: 18pt;
+      color: #2c3e50;
+    }
     
-    alert(`PDF opened in new tab and saved as ${fileName}`)
-  } catch (error) {
-    console.error('PDF Export Error:', error)
-    console.log('Available methods on doc:', Object.getOwnPropertyNames(doc))
-    alert(`Error exporting PDF: ${error.message}`)
-  }
+    .summary {
+      margin-bottom: 15px;
+      font-size: 9pt;
+      color: #666;
+    }
+    
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 8pt;
+    }
+    
+    .results-table th {
+      background-color: #007bff;
+      color: white;
+      padding: 6px 4px;
+      text-align: left;
+      font-weight: bold;
+      font-size: 8pt;
+      border: 1px solid #ddd;
+    }
+    
+    .results-table td {
+      padding: 4px;
+      border: 1px solid #ddd;
+      vertical-align: top;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    
+    .results-table tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+    
+    .strongs-col {
+      width: 12%;
+      text-align: center;
+      font-weight: bold;
+      color: #007bff;
+    }
+    
+    .count-col {
+      width: 6%;
+      text-align: center;
+    }
+    
+    .lang-col {
+      width: 5%;
+      text-align: center;
+    }
+    
+    .word-col {
+      width: 18%;
+      font-weight: 500;
+    }
+    
+    .definition-col {
+      width: 59%;
+      line-height: 1.3;
+    }
+    
+    .count-badge {
+      background: #28a745;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-size: 7pt;
+      font-weight: bold;
+    }
+    
+    .lang-badge {
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-size: 7pt;
+      font-weight: bold;
+    }
+    
+    .lang-hebrew {
+      background: #ffc107;
+      color: #000;
+    }
+    
+    .lang-greek {
+      background: #17a2b8;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📖 Strong's Dictionary Text Analysis Report</h1>
+    <div class="summary">
+      Generated on: ${currentDate} | 
+      Total Strong's Numbers: ${totalWords.value} | 
+      Unique Words: ${uniqueWords.value}
+    </div>
+  </div>
+  
+  <table class="results-table">
+    <thead>
+      <tr>
+        <th class="strongs-col">Strong's #</th>
+        <th class="count-col">Count</th>
+        <th class="lang-col">Lang</th>
+        <th class="word-col">Word</th>
+        <th class="definition-col">Definition</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${analysisResults.value.map(result => `
+        <tr>
+          <td class="strongs-col">${result.strongsNumber}</td>
+          <td class="count-col">
+            <span class="count-badge">${result.count}</span>
+          </td>
+          <td class="lang-col">
+            <span class="lang-badge ${result.language.toLowerCase() === 'hebrew' ? 'lang-hebrew' : 'lang-greek'}">
+              ${result.language.charAt(0)}
+            </span>
+          </td>
+          <td class="word-col">${result.word || 'N/A'}</td>
+          <td class="definition-col">${result.definition || 'Definition not available'}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+  
+  <script>
+    window.onload = function() {
+      window.print();
+    }
+  <\/script>
+</body>
+</html>`
+  
+  printWindow.document.write(printContent)
+  printWindow.document.close()
 }
 
 const totalWords = computed(() => {
@@ -269,7 +326,7 @@ onMounted(loadDictionary)
               🔍 Analyze Text
             </button>
             <button @click="exportToPDF" class="export-btn" v-if="showAnalysis">
-              📄 Export PDF
+              �️ Print to PDF
             </button>
             <button @click="clearAnalysis" class="clear-btn" v-if="showAnalysis">
               🗑️ Clear
