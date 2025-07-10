@@ -1,0 +1,32 @@
+{
+  "name": "strongs-dictionary-analyzer",
+  "description": "A modern web application for analyzing biblical text with Strong's numbers",
+  "version": "1.0.0",
+  "author": "Pat Rutledge",
+  "private": true,
+  "type": "module",
+  "keywords": [
+    "bible",
+    "strongs",
+    "hebrew",
+    "greek",
+    "dictionary",
+    "analysis",
+    "biblical-study"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "clean-data": "node clean-hebrew.js && node clean-greek.js"
+  },
+  "dependencies": {
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "vite": "^6.3.5"
+  }
+}
