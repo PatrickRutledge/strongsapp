@@ -15,6 +15,12 @@ A modern web application for analyzing biblical text containing Strong's numbers
 - **Detailed Definitions**: Access complete Hebrew and Greek word definitions
 - **Clean Interface**: Simple, focused design for efficient study
 
+### 📄 PDF Export
+- **Print to PDF**: Generate professional PDF reports with perfect formatting
+- **Letter-Size Pages**: Tables automatically fit standard 8.5"×11" pages
+- **Text Wrapping**: Long definitions wrap properly within table cells
+- **Professional Styling**: Clean, readable output with proper margins
+
 ### 📊 Analysis Results
 For each Strong's number found in your text, see:
 1. **Count**: Number of times the word appears
@@ -36,6 +42,7 @@ For each Strong's number found in your text, see:
 - **Vite** for fast development
 - **Modern CSS** with responsive design
 - **Strong's Dictionary Data** in JSON format
+- **Browser Print API** for PDF generation
 
 ## Quick Start
 
