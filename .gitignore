@@ -1,0 +1,53 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Distribution files (too large for Git)
+Strong's-Dictionary-Analyzer-Windows.zip
+dist-electron/
+dist-electron-store/
+build/
+
+# Electron build artifacts
+electron/main.js
+electron/preload.js
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Certificates and sensitive files
+*.cer
+*.pfx
+store-certs/
+
+# Temporary files
+temp-check/
+*.bak
+
+# App specific
+assets-mapping.txt
+mapping.txt.bak
+install-cert.ps1
+*.appx
+
+# Debug files
+*-debug.yml
+*-debug.log

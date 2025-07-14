@@ -1,0 +1,15 @@
+directories:
+  output: dist-electron-store
+  buildResources: build
+appId: AetherForge.StrongsLexiCount
+productName: Strong's LexiCount
+files:
+  - filter:
+      - dist/**/*
+      - electron/**/*
+      - store-assets/**/*
+      - AppxManifest.xml
+win:
+  target: dir
+  icon: store-assets/icons/Square310x310Logo.png
+electronVersion: 37.2.0

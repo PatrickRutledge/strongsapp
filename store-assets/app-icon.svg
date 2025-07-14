@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with gradient -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8f9fa;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <circle cx="128" cy="128" r="120" fill="url(#bg)" stroke="#5a67d8" stroke-width="4"/>
+  
+  <!-- Book base -->
+  <rect x="64" y="80" width="128" height="96" rx="8" ry="8" fill="url(#bookGradient)" stroke="#2d3748" stroke-width="2"/>
+  
+  <!-- Book spine -->
+  <rect x="64" y="80" width="16" height="96" rx="8" ry="8" fill="#4a5568"/>
+  
+  <!-- Book pages -->
+  <rect x="72" y="88" width="112" height="80" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  
+  <!-- Hebrew letter Aleph (stylized) -->
+  <g transform="translate(88, 108)">
+    <path d="M20 8 L28 24 L32 16 L40 32 L36 32 L30 20 L26 28 L18 12 Z" fill="#2b6cb0" stroke="#1e40af" stroke-width="1"/>
+    <path d="M12 32 L20 16 L16 8 L8 24 Z" fill="#2b6cb0" stroke="#1e40af" stroke-width="1"/>
+  </g>
+  
+  <!-- Greek letter Alpha (stylized) -->
+  <g transform="translate(140, 108)">
+    <path d="M8 32 L16 8 L24 32 M12 24 L20 24" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <!-- Decorative elements -->
+  <circle cx="88" cy="148" r="2" fill="#fbbf24"/>
+  <circle cx="168" cy="148" r="2" fill="#fbbf24"/>
+  
+  <!-- Text highlight -->
+  <rect x="88" y="144" width="80" height="2" fill="#fbbf24" opacity="0.6"/>
+</svg>
