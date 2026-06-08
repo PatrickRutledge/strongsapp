@@ -1,32 +1,96 @@
 {
-  "name": "strongs-dictionary-analyzer",
-  "description": "A modern web application for analyzing biblical text with Strong's numbers",
-  "version": "1.0.0",
-  "author": "Pat Rutledge",
+  "name": "strongs-lexicount",
   "private": true,
+  "version": "1.1.1",
   "type": "module",
-  "keywords": [
-    "bible",
-    "strongs",
-    "hebrew",
-    "greek",
-    "dictionary",
-    "analysis",
-    "biblical-study"
-  ],
+  "description": "Analyze biblical text with Strong's numbers and load passages from the bundled KJV.",
+  "author": "Aether Forge",
+  "homepage": "https://github.com/PatrickRutledge/strongsapp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PatrickRutledge/strongsapp.git"
+  },
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:web": "vite build --mode production",
+    "build:electron": "vite build --mode electron",
     "preview": "vite preview",
-    "clean-data": "node clean-hebrew.js && node clean-greek.js"
+    "electron": "electron .",
+    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5173 && electron .\"",
+    "electron:pack": "npm run build:electron && electron-builder",
+    "electron:dist": "npm run build:electron && electron-builder --publish=never",
+    "dist": "npm run build:electron && electron-builder"
   },
   "dependencies": {
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
-    "vue": "^3.5.13"
+    "vue": "^3.4.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.3",
-    "vite": "^6.3.5"
+    "@vitejs/plugin-vue": "^5.0.0",
+    "concurrently": "^9.2.0",
+    "electron": "^37.2.0",
+    "electron-builder": "^26.0.12",
+    "vite": "^6.0.0",
+    "wait-on": "^8.0.3"
+  },
+  "keywords": [
+    "strongs",
+    "dictionary",
+    "biblical",
+    "hebrew",
+    "greek",
+    "vue",
+    "text-analysis"
+  ],
+  "build": {
+    "appId": "com.aetherforge.strongslexicount",
+    "productName": "Strong's LexiCount",
+    "directories": {
+      "output": "dist-electron-store"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "extraMetadata": {
+      "main": "electron/main.cjs"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "appx",
+          "arch": ["x64"]
+        }
+      ],
+      "forceCodeSigning": false,
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "appx": {
+      "applicationId": "App",
+      "identityName": "AetherForge.StrongsLexiCount",
+      "publisherDisplayName": "Aether Forge",
+      "publisher": "CN=80415444-5392-4904-8AC7-7511A51DFC7C",
+      "displayName": "Strong's LexiCount",
+      "backgroundColor": "#667eea",
+      "showNameOnTiles": true,
+      "setBuildNumber": true
+    },
+    "mac": {
+      "target": "dir",
+      "category": "public.app-category.education"
+    },
+    "linux": {
+      "target": "dir",
+      "category": "Education"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }
